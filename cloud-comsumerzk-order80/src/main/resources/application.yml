@@ -1,0 +1,11 @@
+server:
+  port: 80
+spring:
+  application:
+    name: cloud-provider-order
+  cloud:
+    zookeeper:
+      # 默认localhost:2181
+      connect-string: 192.168.0.133:2181,192.168.0.133:2182,192.168.0.133:2183
+      discovery:
+        instance-host: ${spring.cloud.client.ip-address}
