@@ -10,6 +10,8 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -28,6 +30,9 @@ public class PaymentController {
     @Autowired
     private EurekaDiscoveryClient discoveryClient;
 
+    @Autowired
+    private HttpServletRequest request;
+
     @Value("${server.port}")
     private String SERVER_PORT;
 
@@ -45,6 +50,14 @@ public class PaymentController {
 
     @GetMapping("/get/{id}")
     public CommonResult getPaymentById(@PathVariable("id") Long id) {
+        Enumeration<String> headerNames = request.getHeaderNames();
+        if (headerNames != null) {
+            while (headerNames.hasMoreElements()) {
+                String name = headerNames.nextElement();
+                String values = request.getHeader(name);
+                log.error(name+" : "+values);
+            }
+        }
         Payment payment = paymentService.getPaymentById(id);
         log.info("***查询结果：" + payment);
         if (payment != null) {

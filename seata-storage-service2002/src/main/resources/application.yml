@@ -1,0 +1,46 @@
+server:
+  port: 2002
+
+spring:
+  application:
+    name: seata-storage-service
+  cloud:
+#    alibaba:
+#      seata:
+#        tx-service-group: test_seata_group
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:6001/seata_storage?allowMultiQueries=true&rewriteBatchedStatements=true&zeroDateTimeBehavior=convertToNull&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+
+seata:
+  application-id: ${spring.application.name}  # 可以自定义
+  txServiceGroup: test_seata_group # 此处的名称一定要与 vgroupMapping下配置的参数保持一致
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: localhost:8848
+      namespace:
+  config:
+    type: nacos
+    nacos:
+      namespace:
+      serverAddr: localhost:8848
+      group: SEATA_GROUP
+  # 这边自动代理关掉，此处自己代码做了处理
+  enableAutoDataSourceProxy: false
+
+logging:
+  level:
+    io:
+      seata: info
+
+mybatis:
+  mapperLocations: classpath:mapper/*.xml
+
+
